@@ -1,5 +1,6 @@
 const dataArea = document.querySelector('.data');
 const button = document.querySelector('.button');
+const alertArea = document.querySelector('.message-area');
 
 
 
@@ -19,12 +20,21 @@ const button = document.querySelector('.button');
 //                 })
 // }
 
-function data1() {
+function thousand_separator(num) { 
 
-        const key = '19953ecf9cfc6399251cc09c'
-        let from = document.querySelector('.from').value;
-        let to = document.querySelector('.to').value;
-        let amount = document.querySelector('.amount').value;
+        const figure = new Intl.NumberFormat();
+        const figureValue = figure.format(num);
+        return figureValue;
+
+}
+
+function data() {
+
+        const key = '19953ecf9cfc6399251cc09c';
+
+        let from = document.querySelector('.from').value.toUpperCase();
+        let to = document.querySelector('.to').value.toUpperCase();
+        let amount = (document.querySelector('.amount').value);
 
         const xhr = new XMLHttpRequest();
 
@@ -33,12 +43,34 @@ function data1() {
 
         xhr.onload = function() {
                 if(xhr.status === 200) {
-                        alert('Data successfully received')
+
+                        
                         let result = JSON.parse(xhr.responseText);
-                        console.log(result);
-                        dataArea.innerHTML = result.conversion_result
+                        let money_value = Math.floor(result.conversion_result)
+                        dataArea.innerHTML = 'Currency Converted to : ' + to.toUpperCase() + ' ' + thousand_separator(money_value);
+                        
+                        setTimeout(() => {
+                                alertArea.style.display = 'block';
+                                alertArea.style.backgroundColor = 'green'
+                                alertArea.innerHTML = 'Data Successfully Fetched ...';
+                        }, 10);
+
+                        setTimeout(() => {
+                                alertArea.style.display = 'none';
+                        }, 2000)
+
                 } else {
-                        alert('Data Failure')
+
+                        setTimeout(() => {
+                                alertArea.style.display = 'block';
+                                alertArea.style.backgroundColor = 'red'
+                                alertArea.innerHTML = 'Data Fecthing failed. Check your Currency Codes...';
+                        }, 10);
+
+                        setTimeout(() => {
+                                alertArea.style.display = 'none';
+                        }, 3000)
+
                 }
         }
 
@@ -47,5 +79,5 @@ function data1() {
 
 }
 
-button.addEventListener('click', data1);
+button.addEventListener('click', data);
 
